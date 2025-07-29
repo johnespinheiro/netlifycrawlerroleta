@@ -1,12 +1,7 @@
-# Configuração de build que executa nosso script customizado
+# Configuração de build que aponta para o diretório das funções.
+# Esta é a configuração padrão e recomendada para deploy via Git.
 [build]
-  # CORREÇÃO CRÍTICA: Executa o script "build" do package.json
-  command = "npm run build"
   functions = "netlify/functions"
-
-# Configuração específica para as funções, mantendo o empacotador 'nft'
-[functions]
-  node_bundler = "nft"
 
 # A regra de redirecionamento permanece a mesma.
 [[redirects]]

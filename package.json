@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "API para extrair dados de jogos para deploy no Netlify",
   "scripts": {
-    "start": "netlify dev",
-    "build": "npm install --arch=x64 --platform=linux --target_arch=x64 --build-from-source sqlite3"
+    "start": "netlify dev"
   },
   "dependencies": {
     "@sparticuz/chromium": "^119.0.0",
@@ -12,9 +11,7 @@
     "express": "^4.18.2",
     "puppeteer-core": "^21.5.2",
     "random-useragent": "^0.5.0",
-    "sequelize": "^6.35.1",
     "serverless-http": "^3.2.0",
-    "sqlite3": "^5.1.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },
