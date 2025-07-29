@@ -10,19 +10,26 @@ async function scrapeRoletaBrasileira() {
   console.log('--- INICIANDO SCRAPER REAL ---');
   let browser = null;
   try {
-    // CORREÇÃO DEFINITIVA: Tomar controlo total dos argumentos do browser.
-    // 1. Filtramos qualquer argumento '--headless' que a biblioteca possa adicionar por defeito.
-    const chromiumArgs = chromium.args.filter(arg => arg !== '--headless' && arg !== '--headless=true');
-    // 2. Adicionamos explicitamente o novo modo headless, que não precisa de bibliotecas de sistema antigas.
-    chromiumArgs.push('--headless=new');
+    // CORREÇÃO FINAL: Usar um conjunto completo de argumentos para ambientes restritos.
+    // Esta lista desativa funcionalidades que dependem de bibliotecas de sistema ausentes.
+    const minimal_args = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-gpu',
+      '--headless=new' // Garantir que o novo modo headless é usado
+    ];
 
-    console.log('[LOG] 1. Lançando o browser com Puppeteer e argumentos controlados...');
+    console.log('[LOG] 1. Lançando o browser com Puppeteer e argumentos mínimos...');
     browser = await puppeteer.launch({
-      args: chromiumArgs,
-      defaultViewport: chromium.defaultViewport,
+      args: minimal_args,
       executablePath: await chromium.executablePath(),
-      // A propriedade 'headless' é removida daqui para evitar conflitos com os 'args'.
       ignoreHTTPSErrors: true,
+      defaultViewport: chromium.defaultViewport
     });
     console.log('[LOG] 2. Browser lançado com sucesso.');
 
