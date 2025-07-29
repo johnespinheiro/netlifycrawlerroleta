@@ -84,7 +84,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  * summary: Obtém os dados mais recentes da Roleta Brasileira.
  * description: Executa o scraper em tempo real para buscar e retornar os últimos resultados do jogo.
  * responses:
- * 200:
+ * '200':
  * description: Uma lista de resultados da roleta.
  * content:
  * application/json:
@@ -99,7 +99,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  * cor:
  * type: string
  * example: "red"
- * 500:
+ * '500':
  * description: Falha durante o processo de scraping.
  */
 app.get('/roleta-brasileira', async (req, res) => {
