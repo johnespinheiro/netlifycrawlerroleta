@@ -1,9 +1,9 @@
-# Configuração de build que aponta para o diretório das funções.
+# Define o diretório onde as suas funções serverless estão localizadas.
 [build]
   functions = "netlify/functions"
 
-# Redireciona qualquer chamada para /api/... para a nossa função scraper.js
+# Redireciona a chamada para /hello para a nossa função hello.js
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/scraper/:splat"
+  from = "/hello"
+  to = "/.netlify/functions/hello"
   status = 200
