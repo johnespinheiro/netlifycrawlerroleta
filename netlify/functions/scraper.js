@@ -5,21 +5,23 @@ const puppeteer = require('puppeteer-core');
 const cheerio = require('cheerio');
 const randomUseragent = require('random-useragent');
 
-// A linha incorreta 'chromium.setHeadless("new");' foi removida.
-
 // --- LÓGICA DO SCRAPER (VERSÃO REAL) ---
 async function scrapeRoletaBrasileira() {
   console.log('--- INICIANDO SCRAPER REAL ---');
   let browser = null;
   try {
-    console.log('[LOG] 1. Lançando o browser com Puppeteer...');
+    // CORREÇÃO DEFINITIVA: Tomar controlo total dos argumentos do browser.
+    // 1. Filtramos qualquer argumento '--headless' que a biblioteca possa adicionar por defeito.
+    const chromiumArgs = chromium.args.filter(arg => arg !== '--headless' && arg !== '--headless=true');
+    // 2. Adicionamos explicitamente o novo modo headless, que não precisa de bibliotecas de sistema antigas.
+    chromiumArgs.push('--headless=new');
+
+    console.log('[LOG] 1. Lançando o browser com Puppeteer e argumentos controlados...');
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: chromiumArgs,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
-      // CORREÇÃO: Forçar o novo modo headless diretamente nas opções do Puppeteer.
-      // Isto resolve o erro 'libnspr4.so' de forma correta.
-      headless: 'new',
+      // A propriedade 'headless' é removida daqui para evitar conflitos com os 'args'.
       ignoreHTTPSErrors: true,
     });
     console.log('[LOG] 2. Browser lançado com sucesso.');
