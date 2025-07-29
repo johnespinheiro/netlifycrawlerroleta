@@ -1,13 +1,13 @@
 {
   "name": "game-data-api-netlify",
   "version": "1.0.0",
-  "description": "API para extrair dados de jogos para deploy no Netlify",
+  "description": "API para extrair dados da Roleta Brasileira da Tipminer via Netlify Functions",
   "scripts": {
     "start": "netlify dev"
   },
   "dependencies": {
-    "@sparticuz/chromium": "^112.0.0",          
-    "puppeteer-core": "^20.8.1",                
+    "@sparticuz/chromium": "^112.0.2",
+    "puppeteer-core": "^19.11.1",
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "random-useragent": "^0.5.0",

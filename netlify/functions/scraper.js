@@ -5,7 +5,6 @@ const puppeteer = require('puppeteer-core');
 const cheerio = require('cheerio');
 const randomUseragent = require('random-useragent');
 
-// --- FUNÇÃO PRINCIPAL DE SCRAPING ---
 async function scrapeRoletaBrasileira() {
   console.log('--- INICIANDO SCRAPER ---');
   let browser = null;
@@ -28,6 +27,7 @@ async function scrapeRoletaBrasileira() {
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
     await page.waitForSelector('.roulette-history-container', { timeout: 30000 });
+
     const content = await page.content();
     const $ = cheerio.load(content);
 
@@ -58,7 +58,7 @@ async function scrapeRoletaBrasileira() {
   }
 }
 
-// --- CONFIGURAÇÃO EXPRESS COM SERVERLESS ---
+// --- Express + Serverless Wrapper ---
 const app = express();
 const router = express.Router();
 
@@ -73,5 +73,4 @@ router.get('/roleta-brasileira', async (req, res) => {
 });
 
 app.use('/api', router);
-
 module.exports.handler = serverless(app);
