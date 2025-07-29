@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "API para extrair dados de jogos para deploy no Netlify",
   "scripts": {
-    "start": "netlify dev"
+    "start": "netlify dev",
+    "build": "npm install --arch=x64 --platform=linux --target_arch=x64 --build-from-source sqlite3"
   },
   "dependencies": {
     "@sparticuz/chromium": "^119.0.0",
