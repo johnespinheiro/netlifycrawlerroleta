@@ -2,7 +2,14 @@
 [build]
   functions = "netlify/functions"
 
-# Redireciona a chamada para /hello para a nossa função hello.js
+# Redireciona a chamada para /api/... para a nossa função scraper.js
+# O :splat no final garante que /api/roleta-brasileira funcione.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/scraper/:splat"
+  status = 200
+
+# Mantemos a rota /hello para testes rápidos.
 [[redirects]]
   from = "/hello"
   to = "/.netlify/functions/hello"
