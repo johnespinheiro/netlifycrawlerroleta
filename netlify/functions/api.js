@@ -1,7 +1,5 @@
 const express = require('express');
 const serverless = require('serverless-http');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 const cheerio = require('cheerio');
@@ -62,55 +60,7 @@ async function scrapeRoletaBrasileira() {
 // --- LÓGICA DA API (EXPRESS) ---
 const app = express();
 
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API de Dados de Jogos (Ao Vivo)',
-      version: '1.0.0',
-      description: 'API que utiliza web scraping para fornecer dados históricos de jogos em tempo real.',
-    },
-    servers: [{ url: `/api` }],
-  },
-  // CORREÇÃO: Usar __filename para garantir que o caminho do arquivo seja absoluto e único.
-  apis: [__filename], 
-};
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-/**
- * @swagger
- * /roleta-brasileira:
- * get:
- * summary: "Obtém os dados mais recentes da Roleta Brasileira."
- * description: "Executa o scraper em tempo real para buscar e retornar os últimos resultados do jogo."
- * responses:
- * '200':
- * description: "Uma lista de resultados da roleta."
- * content:
- * application/json:
- * schema:
- * type: array
- * items:
- * type: object
- * properties:
- * numero:
- * type: string
- * example: "14"
- * cor:
- * type: string
- * example: "red"
- * '500':
- * description: "Falha durante o processo de scraping."
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * message:
- * type: string
- * example: "Falha ao buscar os dados."
- */
+// Endpoint principal que retorna os dados do scraper
 app.get('/roleta-brasileira', async (req, res) => {
   try {
     const resultados = await scrapeRoletaBrasileira();
@@ -120,8 +70,9 @@ app.get('/roleta-brasileira', async (req, res) => {
   }
 });
 
+// Endpoint raiz para verificar se a API está no ar
 app.get('/', (req, res) => {
-    res.json({ message: 'API de Scrapping de Jogos está no ar! Acesse /docs para ver a documentação.'});
+    res.json({ message: 'API de Scrapping de Jogos está no ar!'});
 });
 
 // Exporta o handler para o ambiente serverless
