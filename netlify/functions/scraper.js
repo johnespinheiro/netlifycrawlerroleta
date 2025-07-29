@@ -5,9 +5,7 @@ const puppeteer = require('puppeteer-core');
 const cheerio = require('cheerio');
 const randomUseragent = require('random-useragent');
 
-// CORREÇÃO: Forçar o novo modo headless do Chrome, que tem menos dependências.
-// Esta é a correção mais comum para o erro 'libnspr4.so' em ambientes Lambda/Netlify.
-chromium.setHeadless("new");
+// A linha incorreta 'chromium.setHeadless("new");' foi removida.
 
 // --- LÓGICA DO SCRAPER (VERSÃO REAL) ---
 async function scrapeRoletaBrasileira() {
@@ -19,7 +17,9 @@ async function scrapeRoletaBrasileira() {
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
+      // CORREÇÃO: Forçar o novo modo headless diretamente nas opções do Puppeteer.
+      // Isto resolve o erro 'libnspr4.so' de forma correta.
+      headless: 'new',
       ignoreHTTPSErrors: true,
     });
     console.log('[LOG] 2. Browser lançado com sucesso.');
