@@ -1,27 +1,74 @@
 const express = require('express');
 const serverless = require('serverless-http');
+const chromium = require('@sparticuz/chromium');
+const puppeteer = require('puppeteer-core');
+const cheerio = require('cheerio');
+const randomUseragent = require('random-useragent');
 
-// --- LÓGICA DO SCRAPER (VERSÃO DE TESTE) ---
-// Mantemos a versão de teste por agora para garantir que o encaminhamento funciona.
+// --- LÓGICA DO SCRAPER (VERSÃO REAL) ---
 async function scrapeRoletaBrasileira() {
-  console.log('--- EXECUTANDO SCRAPER DE TESTE (ROUTER ROBUSTO) ---');
-  const fakeResults = [
-    { numero: '10', cor: 'black' },
-    { numero: '25', cor: 'red' },
-    { numero: '0', cor: 'green' },
-  ];
-  return Promise.resolve(fakeResults);
+  console.log('--- INICIANDO SCRAPER REAL ---');
+  let browser = null;
+  try {
+    console.log('[LOG] 1. Lançando o browser com Puppeteer...');
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
+    });
+    console.log('[LOG] 2. Browser lançado com sucesso.');
+
+    const page = await browser.newPage();
+    console.log('[LOG] 3. Nova página criada.');
+    await page.setUserAgent(randomUseragent.getRandom());
+
+    const url = 'https://www.tipminer.com/br/historico/pragmatic/roleta-brasileira';
+    console.log(`[LOG] 4. Navegando para: ${url}`);
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+    console.log('[LOG] 5. Página carregada. Aguardando pelo seletor...');
+
+    await page.waitForSelector('.roulette-history-container', { timeout: 30000 });
+    console.log('[LOG] 6. Seletor encontrado. Obtendo conteúdo da página...');
+
+    const content = await page.content();
+    const $ = cheerio.load(content);
+
+    const results = [];
+    $('.roulette-single-history-item').each((index, element) => {
+      const item = $(element);
+      const numero = item.text().trim();
+      let cor = 'desconhecida';
+
+      if (item.hasClass('roulette-single-history-item--red')) cor = 'red';
+      else if (item.hasClass('roulette-single-history-item--black')) cor = 'black';
+      else if (item.hasClass('roulette-single-history-item--green')) cor = 'green';
+
+      if (numero) results.push({ numero, cor });
+    });
+
+    console.log(`[LOG] --- SCRAPER FINALIZADO. ${results.length} resultados encontrados. ---`);
+    return results;
+
+  } catch (error) {
+    console.error('!!! ERRO CRÍTICO DURANTE O SCRAPPING !!!', error);
+    // Retorna um array vazio em caso de erro para não quebrar a aplicação cliente
+    return [];
+  } finally {
+    if (browser !== null) {
+      console.log('[LOG] --- FECHANDO O BROWSER ---');
+      await browser.close();
+    }
+  }
 }
 
 // --- LÓGICA DA API (EXPRESS) ---
 const app = express();
-// Criamos um router dedicado para os nossos endpoints de API.
 const router = express.Router();
 
-// Adicionamos a nossa rota ao router.
-// O caminho é relativo ao router, então usamos apenas '/roleta-brasileira'.
 router.get('/roleta-brasileira', async (req, res) => {
-  console.log('>>> ROTA /api/roleta-brasileira ACIONADA COM SUCESSO! <<<');
+  console.log('>>> ROTA /api/roleta-brasileira ACIONADA (LÓGICA REAL) <<<');
   try {
     const resultados = await scrapeRoletaBrasileira();
     res.status(200).json(resultados);
@@ -31,7 +78,6 @@ router.get('/roleta-brasileira', async (req, res) => {
 });
 
 // Montamos o nosso router na aplicação principal com o prefixo '/api'.
-// Isto garante que a nossa aplicação sabe como lidar com o URL completo.
 app.use('/api', router);
 
 // Exportamos o handler para o ambiente serverless.
