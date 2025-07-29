@@ -5,6 +5,10 @@ const puppeteer = require('puppeteer-core');
 const cheerio = require('cheerio');
 const randomUseragent = require('random-useragent');
 
+// CORREÇÃO: Forçar o novo modo headless do Chrome, que tem menos dependências.
+// Esta é a correção mais comum para o erro 'libnspr4.so' em ambientes Lambda/Netlify.
+chromium.setHeadless("new");
+
 // --- LÓGICA DO SCRAPER (VERSÃO REAL) ---
 async function scrapeRoletaBrasileira() {
   console.log('--- INICIANDO SCRAPER REAL ---');
