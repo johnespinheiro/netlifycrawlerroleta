@@ -1,31 +1,22 @@
 const express = require('express');
 const serverless = require('serverless-http');
-const chromium = require('@sparticuz/chromium');
+const chromium = require('chrome-aws-lambda');
 const puppeteer = require('puppeteer-core');
 const cheerio = require('cheerio');
 const randomUseragent = require('random-useragent');
 
 // --- LÓGICA DO SCRAPER (VERSÃO REAL) ---
 async function scrapeRoletaBrasileira() {
-  console.log('--- INICIANDO SCRAPER REAL (VERSÕES ESTÁVEIS) ---');
+  console.log('--- INICIANDO SCRAPER (USANDO CHROME-AWS-LAMBDA) ---');
   let browser = null;
   try {
-    const minimal_args = [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
-      '--single-process',
-      '--disable-gpu',
-      '--headless=new'
-    ];
-
-    console.log('[LOG] 1. Lançando o browser com Puppeteer e argumentos mínimos...');
+    console.log('[LOG] 1. Lançando o browser com Puppeteer e chrome-aws-lambda...');
     browser = await puppeteer.launch({
-      args: minimal_args,
-      executablePath: await chromium.executablePath(),
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
     });
     console.log('[LOG] 2. Browser lançado com sucesso.');
 
