@@ -7,11 +7,9 @@ const randomUseragent = require('random-useragent');
 
 // --- LÓGICA DO SCRAPER (VERSÃO REAL) ---
 async function scrapeRoletaBrasileira() {
-  console.log('--- INICIANDO SCRAPER REAL ---');
+  console.log('--- INICIANDO SCRAPER REAL (VERSÕES ESTÁVEIS) ---');
   let browser = null;
   try {
-    // CORREÇÃO FINAL: Usar um conjunto completo de argumentos para ambientes restritos.
-    // Esta lista desativa funcionalidades que dependem de bibliotecas de sistema ausentes.
     const minimal_args = [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -21,15 +19,13 @@ async function scrapeRoletaBrasileira() {
       '--no-zygote',
       '--single-process',
       '--disable-gpu',
-      '--headless=new' // Garantir que o novo modo headless é usado
+      '--headless=new'
     ];
 
     console.log('[LOG] 1. Lançando o browser com Puppeteer e argumentos mínimos...');
     browser = await puppeteer.launch({
       args: minimal_args,
       executablePath: await chromium.executablePath(),
-      ignoreHTTPSErrors: true,
-      defaultViewport: chromium.defaultViewport
     });
     console.log('[LOG] 2. Browser lançado com sucesso.');
 
@@ -66,7 +62,6 @@ async function scrapeRoletaBrasileira() {
 
   } catch (error) {
     console.error('!!! ERRO CRÍTICO DURANTE O SCRAPPING !!!', error);
-    // Retorna um array vazio em caso de erro para não quebrar a aplicação cliente
     return [];
   } finally {
     if (browser !== null) {
@@ -90,8 +85,6 @@ router.get('/roleta-brasileira', async (req, res) => {
   }
 });
 
-// Montamos o nosso router na aplicação principal com o prefixo '/api'.
 app.use('/api', router);
 
-// Exportamos o handler para o ambiente serverless.
 module.exports.handler = serverless(app);
