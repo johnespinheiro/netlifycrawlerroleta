@@ -70,10 +70,10 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API que utiliza web scraping para fornecer dados históricos de jogos em tempo real.',
     },
-    servers: [{ url: `/api` }], // Assumindo que a API é servida a partir de /api
+    servers: [{ url: `/api` }],
   },
-  // O caminho para o arquivo que contém as anotações do Swagger
-  apis: ['./netlify/functions/api.js'], 
+  // CORREÇÃO: Usar __filename para garantir que o caminho do arquivo seja absoluto e único.
+  apis: [__filename], 
 };
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
