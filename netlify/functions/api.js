@@ -70,9 +70,10 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API que utiliza web scraping para fornecer dados históricos de jogos em tempo real.',
     },
-    servers: [{ url: `/api` }],
+    servers: [{ url: `/api` }], // Assumindo que a API é servida a partir de /api
   },
-  apis: ['netlify/functions/api.js'],
+  // O caminho para o arquivo que contém as anotações do Swagger
+  apis: ['./netlify/functions/api.js'], 
 };
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -81,11 +82,11 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  * @swagger
  * /roleta-brasileira:
  * get:
- * summary: Obtém os dados mais recentes da Roleta Brasileira.
- * description: Executa o scraper em tempo real para buscar e retornar os últimos resultados do jogo.
+ * summary: "Obtém os dados mais recentes da Roleta Brasileira."
+ * description: "Executa o scraper em tempo real para buscar e retornar os últimos resultados do jogo."
  * responses:
  * '200':
- * description: Uma lista de resultados da roleta.
+ * description: "Uma lista de resultados da roleta."
  * content:
  * application/json:
  * schema:
@@ -100,7 +101,15 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
  * type: string
  * example: "red"
  * '500':
- * description: Falha durante o processo de scraping.
+ * description: "Falha durante o processo de scraping."
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * message:
+ * type: string
+ * example: "Falha ao buscar os dados."
  */
 app.get('/roleta-brasileira', async (req, res) => {
   try {
@@ -112,7 +121,8 @@ app.get('/roleta-brasileira', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.json({ message: 'API de Scrapping de Jogos está no ar! Acesse /api/docs para ver a documentação.'});
+    res.json({ message: 'API de Scrapping de Jogos está no ar! Acesse /docs para ver a documentação.'});
 });
 
+// Exporta o handler para o ambiente serverless
 module.exports.handler = serverless(app);
