@@ -1,6 +1,9 @@
 # Define o diretório onde as suas funções serverless estão localizadas.
 [build]
   functions = "netlify/functions"
+  environment = { 
+    CHROME_EXECUTABLE_PATH = "/var/task/node_modules/@sparticuz/chromium/bin/chromium"
+  }
 
 # Redireciona a chamada para /api/... para a nossa função scraper.js
 # O :splat no final garante que /api/roleta-brasileira funcione.
