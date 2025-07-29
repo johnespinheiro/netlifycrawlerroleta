@@ -1,10 +1,9 @@
 # Configuração de build que aponta para o diretório das funções.
-# Esta é a configuração padrão e recomendada para deploy via Git.
 [build]
   functions = "netlify/functions"
 
-# A regra de redirecionamento permanece a mesma.
+# Redireciona qualquer chamada para /api/... para a nossa função scraper.js
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
+  to = "/.netlify/functions/scraper/:splat"
   status = 200
