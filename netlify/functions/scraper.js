@@ -12,7 +12,7 @@ exports.handler = async (event, context) => {
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: process.env.CHROME_EXECUTABLE_PATH || await chromium.executablePath(),
+      executablePath: await chromium.executablePath(),
       headless: chromium.headless,
     });
 
@@ -37,7 +37,7 @@ exports.handler = async (event, context) => {
     });
 
     console.log(`[LOG] ${resultados.length} resultados coletados.`);
-    
+
     return {
       statusCode: 200,
       body: JSON.stringify({

@@ -1,16 +1,10 @@
 {
-  "name": "game-data-api-netlify",
+  "name": "netlify-roleta-scraper",
   "version": "1.0.0",
-  "description": "API para extrair dados de jogos para deploy no Netlify",
+  "type": "module",
   "dependencies": {
     "@sparticuz/chromium": "^112.0.0",
     "puppeteer-core": "^20.8.1",
     "cheerio": "^1.0.0-rc.12"
-  },
-  "devDependencies": {
-    "netlify-cli": "^17.10.1"
-  },
-  "scripts": {
-    "start": "netlify dev"
   }
 }
