@@ -1,0 +1,10 @@
+# Configuração de build que aponta para o diretório das funções.
+# Esta é a configuração padrão e recomendada.
+[build]
+  functions = "netlify/functions"
+
+# A regra de redirecionamento permanece a mesma.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
